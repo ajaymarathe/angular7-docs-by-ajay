@@ -137,35 +137,6 @@ export class CreateQuestionComponent implements OnInit {
 
 }
 
-// Edit Update Forms with ngModel
-
-    <h2>Edit Question</h2>
-        <form (ngSubmit)="PublishQuestion()"> // on submit button, PublishQuestion function will get call
-          <div class="form-group">
-            <label>Title:</label>
-            <input type="text" class="form-control"  name="title" [(ngModel)]="title"  placeholder="Enter the title.."> //define ng model with name
-          </div>
-          <div class="form-group">
-              <label>Category:</label>
-            <select  class="custom-select mr-sm-2"  name="category" [(ngModel)]="category">  //define ng model with name
-                <option *ngFor="let cat of categories" [ngValue]="cat.id">{{cat.name}}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Body:</label>
-            <angular-markdown-editor
-              textareaId="editor1" rows="12"
-              name="markdownText" [(ngModel)]="markdownText"  //define ng model with name
-              [locale]="locale"
-              [options]="editorOptions">
-            </angular-markdown-editor>
-          </div>
-          <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Publish">  //submit button
-          </div>
-      </form>
-
-
     // Submit and go back to previous page
     import { Location } from '@angular/common'; //import location in component'
 
@@ -183,7 +154,149 @@ export class CreateQuestionComponent implements OnInit {
     redirect(){ //onclick redirect function it will get redirect to given path
         this.router.navigate(['']);
     }
-   
+
+
+    // add bootstrap in angular project
+    npm i bootstrap // install all these three commands
+    npm i jquery 
+    npm i popper.js 
+
+    // import bootstrap.min.css in Style.scss
+    "styles": [
+        "src/styles.scss",
+        "./node_modules/font-awesome/css/font-awesome.min.css",
+      ],
+    
+    // import other script dependency
+    "scripts": [
+        "./node_modules/jquery/dist/jquery.min.js",  
+        "./node_modules/popper.js/dist/umd/popper.min.js",  
+        "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+    ],
+
+    // Edit & update with ngModel
+
+      <h1>Edit Post</h1>
+      <form (ngSubmit)="EditPost()" *ngIf="editPost"> // on click update button, EditPost function will get call
+        <div class="form-group">
+          <mat-form-field>
+            <input type="text" [(ngModel)]="editPost.title"  name="title" class="form-control shadow-none" matInput placeholder="Title"> //define ngModel with name property
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field>
+            <mat-select placeholder="Select"  name="category" [(ngModel)]="editPost.category" name="category"> //define ngModel with name property
+              <mat-option *ngFor="let category of categories_data" [value]="editPost.category">{{ category.category }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <ckeditor [editor]="Editor" name="body" [(ngModel)]="editPost.body"></ckeditor> //define ngModel with name property
+        </div>
+        <div class="form-group">
+            // update button
+          <button type="submit" class="btn btn-primary">Update</button> 
+        </div>
+      </form>
+
+// EditPost component
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router'; // import ActivatedRoute and Router
+import { PostService } from '../post.service'; // import the service
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
+@Component({
+  selector: 'app-edit-post',
+  templateUrl: './edit-post.component.html',
+  styleUrls: ['./edit-post.component.css']
+})
+export class EditPostComponent implements OnInit {
+  public Editor = ClassicEditor;
+
+  constructor(private route: ActivatedRoute, private postservice: PostService, private router: Router) { } //inject ActivatedRoute, service and Router
+  editPost;
+  categories_data;
+
+  ngOnInit() {
+    this.getPost();
+    this.GetCategories();
+  }
+
+  EditPost(){
+    const slug = this.route.snapshot.params.id; //slug
+    console.log(slug);
+    const editPostData =[this.editPost]; // make editPost array
+    console.log(editPostData[0].body); // check the editPostData
+
+    this.postservice.UpdatePost(editPostData,slug) //pass the slug ad editPostData
+    .subscribe(
+      (response: Response) =>{
+        console.log(response);
+      },
+      (error) =>{ 
+        console.log(error);
+        this.router.navigate(['']); //after updating the post, redirect it to home
+      }
+    );
+  }
+
+  getPost(){
+    const slug = this.route.snapshot.params.id; //get the slug
+    console.log(slug);
+
+    this.postservice.ShowPost(slug) //pass the slug
+    .subscribe(
+      (response: Response) =>{
+        this.editPost = response; //store the response in editPost
+        console.log(response)
+      },
+      (error) => console.log(error)
+    );
+  }
+
+  GetCategories(){ // get categories
+    this.postservice.Catgories()
+    .subscribe(
+      (response: Response) => {
+        this.categories_data = Object.keys(response).map((keys) => response[keys]) // map the response
+        // console.log(response);
+      }
+    );
+  }
+
+}
+
+// Update post service
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http'; //import HttpClient
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PostService {
+
+  constructor(private http: HttpClient) { }
+
+  url = "http://localhost:8000/api/"; // api route
+
+  // update posts
+  UpdatePost(editPostData,slug){
+    // console.log('first',editPostData);
+    // console.log(slug);
+    return this.http.patch(this.url+'posts/'+slug,{ //patch request
+      title: editPostData[0].title,
+      slug: editPostData[0].title, 
+      category: editPostData[0].slug,
+      body: editPostData[0].body
+    });
+  }
+
+}
+
+
+
+
 
 
 
