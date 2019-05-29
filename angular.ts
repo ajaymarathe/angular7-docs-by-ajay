@@ -1,5 +1,46 @@
  /*** Angular 7 ***/
 
+//  App.Module.ts
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http'; //import HttpClientModule module, if you are going to work on services usign http.
+import { FormsModule } from '@angular/forms'; // import FormsModule module, if you are going to work on NgModel.
+
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { QuestionComponent } from './question/question.component';
+import { LoginComponent } from './login/login.component';
+import { ShowQuestionComponent } from './show-question/show-question.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { FooterComponent } from './footer/footer.component';
+import { CreateQuestionComponent } from './create-question/create-question.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    QuestionComponent,
+    LoginComponent,
+    ShowQuestionComponent,
+    SignUpComponent,
+    NavbarComponent,
+    FooterComponent,
+    CreateQuestionComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule, // define your modules here
+    FormsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
 // angular routing
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router'; //import these
@@ -293,6 +334,124 @@ export class PostService {
   }
 
 }
+
+/***Authentication using Angular  */ 
+
+// Login component
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../authentication.service';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
+})
+export class LoginComponent implements OnInit {
+
+  constructor(private authentication_service: AuthenticationService) { }
+
+  email;
+  password;
+
+  responseData;
+
+  ngOnInit() {
+  }
+  
+  LoginUser(){
+    const loginData = [this.email, this.password]; //collect the data in array
+    console.log(loginData);
+
+    this.authentication_service.LogUser(loginData) // pass the data to LogUser service
+    .subscribe(
+      (response: Response) =>{
+        console.log(response);
+        this.responseData = response;
+        localStorage.setItem('access_token', this.responseData.access_token) //set the access_token in LocalStorage
+      }
+    );
+  }
+
+}
+
+//singup Component
+
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../authentication.service'; // import the service
+@Component({
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.scss']
+})
+export class SignUpComponent implements OnInit {
+
+  constructor(private authentication_service: AuthenticationService) { } // inject the service
+
+  name;
+  email;
+  password;
+
+  response_data;
+
+  ngOnInit() {
+  }
+
+  SignUpUser(){
+    const SignupData = [this.name, this.email, this.password]; // collect the data in array
+    console.log(SignupData);
+    this.authentication_service.SignUp(SignupData) // pass the data to service
+    .subscribe(
+      (response: Response) => {
+        console.log(response)
+        this.response_data = response;
+        localStorage.setItem("access_token", this.response_data.access_token); // set the access_token
+      },
+      (error) => console.log(error)
+    );
+  }
+
+}
+
+
+// Authentication service 
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http'; // import the httpClient 
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthenticationService {
+
+  constructor(private http: HttpClient) { } // inject it in constructor
+
+  // sigup the user
+  SignUp(SignupData){
+    return this.http.post("http://127.0.0.1:8000/api/auth/signup",{
+      name: SignupData[0],
+      email: SignupData[1],
+      password: SignupData[2]
+    });
+  }
+
+  // Log the user 
+  LogUser(loginData){
+    return this.http.post("http://127.0.0.1:8000/api/auth/login",{
+      email: loginData[0],
+      password: loginData[1]
+    });
+  }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
