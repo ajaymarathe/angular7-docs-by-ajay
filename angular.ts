@@ -60,6 +60,16 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
+// then in app.module.ts import this line 
+import { AppRoutingModule } from './app-routing.module';
+
+imports:[
+     AppRoutingModule, 
+]
+
+// then add this - <router-outlet></router-outlet> in main html file
+<router-outlet></router-outlet>
+
 // pass params in url 
 // here pass slug or id in routerLink
 <a class="btn btn-primary" [routerLink]="['/show',question.path]">Read More</a>   
