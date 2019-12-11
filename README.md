@@ -1,4 +1,4 @@
-# angular7-docs-by-ajay
+# Angular7 Docs by Ajay
 Hi there, this is angular docs by me.
 
 ## Angular-7
@@ -73,7 +73,7 @@ imports:[
 ]
 ```
 
-### then add this - <router-outlet></router-outlet> in main html file
+### Then add this - ```<router-outlet></router-outlet>``` in main html file
 ```
 <router-outlet></router-outlet>
 ```
