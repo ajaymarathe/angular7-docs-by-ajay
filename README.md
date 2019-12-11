@@ -1,8 +1,6 @@
 # Angular7 Docs by Ajay
 Hi there, this is angular docs by me.
 
-## Angular-7
-
 ### App.Module.ts
 ```
 import { BrowserModule } from '@angular/platform-browser';
