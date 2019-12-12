@@ -481,3 +481,26 @@ export class AuthenticationService {
 }
 ```
 
+## Router
+- Get Current route
+```
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'; // import router from angular/router
+
+
+@Component({
+  selector: 'base-nav',
+  templateUrl: './base-nav.component.html',
+  styleUrls: ['./base-nav.component.scss']
+})
+export class BaseNavComponent implements OnInit {
+
+  constructor(private router: Router) { } //inject here
+
+  ngOnInit() {
+    console.log(this.router.url); // And you will get current route here.
+  }
+
+}
+```
+
