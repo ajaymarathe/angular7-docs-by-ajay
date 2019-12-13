@@ -205,26 +205,6 @@ export class CreateQuestionComponent implements OnInit {
 }
 ```
 
-### Submit and go back to previous page
-```
-import { Location } from '@angular/common'; //import location in component'
-
-constructor(private location: Location) { } // inject location into class constructor
-
-cancel() { //on click cancel, it will go back previous page.
-    this.location.back(); // <-- go back to previous location on cancel
-}
-
-// Redirect with router
-import { Router } from "@angular/router"; //import router from angular/router
-
-constructor(private router: Router) { } // inject router in constructor
-
-redirect(){ //onclick redirect function it will get redirect to given path
-    this.router.navigate(['']);
-}
-```
-
 
 ### Add bootstrap in angular project
 ```
@@ -501,6 +481,31 @@ export class BaseNavComponent implements OnInit {
     console.log(this.router.url); // And you will get current route here.
   }
 
+}
+```
+
+### Go 2 step back
+```
+window.history.go(-2); // <- pass the value that you want to go back.
+```
+
+### Submit and go back to previous page
+```
+import { Location } from '@angular/common'; //import location in component'
+
+constructor(private location: Location) { } // inject location into class constructor
+
+cancel() { //on click cancel, it will go back previous page.
+    this.location.back(); // <-- go back to previous location on cancel
+}
+
+// Redirect with router
+import { Router } from "@angular/router"; //import router from angular/router
+
+constructor(private router: Router) { } // inject router in constructor
+
+redirect(){ //onclick redirect function it will get redirect to given path
+    this.router.navigate(['']);
 }
 ```
 
