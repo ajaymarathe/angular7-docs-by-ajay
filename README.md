@@ -511,6 +511,6 @@ redirect(){ //onclick redirect function it will get redirect to given path
 
 ### Render data as json
 ```
-{{ responseData | json }}
+{{ responseData | json }} <- use this json pipe.
 ```
 
