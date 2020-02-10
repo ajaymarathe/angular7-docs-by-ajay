@@ -546,4 +546,6 @@ import { LimitToPipe } from './limit-to.pipe';
       
   })
 ```
+## Deploy Angular project in Sub-folder
 
+`ng build --base-href /angular-test/`
