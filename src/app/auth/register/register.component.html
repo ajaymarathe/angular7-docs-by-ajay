@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-5 text-center">
+            <div *ngIf="alert" class="alert alert-primary">
+                User has been register Successfully!
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm)">
+                <h1 class="h2">Create Account</h1>
+                <p class="lead text-light-gray">Start doing things for free, Sign up now</p>
+                <button class="btn btn-primary btn-block btn-lg d-flex align-items-center justify-content-center">
+                    <img class="google-img mr-2" src="http://preview.bootcatch.com/create-account/img/google.svg" alt="">
+                    Continue with Google</button>
+                <hr>
+                <div class="form-group">
+                    <input type="text" formControlName="name" class="form-control" placeholder="Enter name..">
+                </div>
+                <div class="form-group">
+                    <input type="text" formControlName="email" class="form-control" placeholder="Email Address..">
+                </div>
+                <div class="form-group">
+                    <input type="password" formControlName="password" class="form-control" placeholder="Password..">
+                </div>
+                <div class="form-group">
+                    <input type="password" formControlName="c_password" class="form-control" placeholder="Confirm Password..">
+                    <p class="text-muted text-left"><small>Your password should be at least 6 characters</small></p>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
+                <p class=" text-muted"><small>Already have account then go to <a routerLink="/login">login</a></small></p>
+            </form>
+        </div>
+    </div>
+</div>
